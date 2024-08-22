@@ -3,7 +3,7 @@ A C++ library which contains all the major data structures for easy use. The DS 
 
 Note: This project is in progress
 
-Done: Hash Map (Done)
+Done: Hash Map
 
 To-Due:
 vector,
