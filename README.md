@@ -3,10 +3,9 @@ A C++ library which contains all the major data structures for easy use. The Dat
 
 Note: This project is in progress
 
-Done: Hash Map, Double-Headed Doubly-Linked Linked List
+Done: Hash Map, Double-Headed Doubly-Linked Linked List, Vector
 
 To-Due:
-vector,
  Stack,
  Queue,
  Max/Min Heap,
