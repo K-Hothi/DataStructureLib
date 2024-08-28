@@ -35,22 +35,25 @@ class LinkedList{
         }
 
         ~LinkedList(){
-            if(head == nullptr){
-                return;
+            Node* current = head;
+            while(current != nullptr){
+                Node* nextNode = current->next;
+                delete current;
+                current = nextNode;
             }
-            else if(head->next == nullptr){
-                delete head;
-            }
-            Node* left = head;
-            Node* right = head->next;
-            while(right != nullptr){
-                delete left;
-                left = right;
-                right = right->next;
+        }
+
+        LinkedList(const LinkedList& ll){
+            Node* current = ll.head;
+
+            while(current != nullptr){
+                this->insert(current->data);
+                current = current->next;
             }
 
-            delete left;
+            this->length = ll.length;
         }
+
 
 
         //Setter & Getter
@@ -92,14 +95,53 @@ class LinkedList{
 
         void removeHead(){
             if(head != nullptr){
-                this->head = head->next;
+                Node* oldHead = head;
+                head = head->next;
                 if(head != nullptr){
                     head->prev = nullptr;
+                }else{
+                    tail = nullptr;
                 }
+                delete oldHead;
+                length--;
             }
         }
+
+        void removeTail(){
+            if(tail != nullptr){
+                Node* oldTail = tail;
+                tail = tail->prev;
+                if(tail != nullptr){
+                    tail->next = nullptr;
+                }else{
+                    head = nullptr;
+                }
+                delete oldTail;
+                length--;
+            }
+        }
+
         Node* remove(T targetValue){
-            return nullptr;
+            if(this->getHead()->data == targetValue){
+                Node* toReturn = head;
+                this->removeHead();
+                return toReturn;
+            }
+            if(this->getTail()->data == targetValue){
+                Node* toReturn = tail;
+                this->removeTail();
+                return toReturn;
+            }
+
+            Node* toRemove = this->search(targetValue);
+            if(toRemove == nullptr){
+                return nullptr;
+            }
+
+            toRemove->prev->next = toRemove->next;
+            toRemove->next->prev = toRemove->prev;
+
+            return toRemove;
         }
 
 
@@ -107,33 +149,46 @@ class LinkedList{
             Node* newNode = new Node(value);
             if(head == nullptr){
                 head = newNode;
+                tail = head;
+            }else{
+                Node* oldTail = tail;
+                oldTail->next = newNode;
                 tail = newNode;
-                return;
+                newNode->prev = oldTail;
+
             }
-            tail->next = newNode;
-            tail = newNode;
             length++;
         }
 
         void print(){
             Node* current = head;
-            while(current != nullptr){
+            while(current->next != nullptr){
                 std::cout << current->data << ", ";
                 current = current->next;
             }
+            std::cout << current->data << std::endl;
         }
 
         //Operator Overloading
-        LinkedList* operator=(LinkedList ll){
-            Node* current = ll.head;
-            LinkedList* newLL = new LinkedList();
+        LinkedList& operator=(const LinkedList& ll){
+            if(this == &ll){
+                return *this;  // Handle self-assignment
+            }
 
+            // Clear the current list
+            while(head != nullptr){
+                removeHead();
+            }
+
+            // Copy elements from the other list
+            Node* current = ll.head;
             while(current != nullptr){
-                newLL->insert(current->data);
+                insert(current->data);
                 current = current->next;
             }
 
-            return newLL;
+            return *this;
         }
+
 
 };
